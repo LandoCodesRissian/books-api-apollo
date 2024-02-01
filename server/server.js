@@ -25,6 +25,11 @@ const startApolloServer = async () => {
   await server.start();
   server.applyMiddleware({ app }); // Apply the Apollo GraphQL middleware
 
+  // Serve the React application's index.html for all other requests to enable SPA routing
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../client/dist/index.html'));
+});
+
   // Once the database is open, start the Express server
   db.once('open', () => {
     app.listen(PORT, () => {
@@ -34,9 +39,6 @@ const startApolloServer = async () => {
   });
 };
 
-// Serve the React application's index.html for all other requests to enable SPA routing
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../client/dist/index.html'));
-});
+
 
 startApolloServer();
