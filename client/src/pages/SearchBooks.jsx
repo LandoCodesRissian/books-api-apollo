@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Container, Col, Form, Button, Card, Row } from 'react-bootstrap';
 import { useMutation } from '@apollo/client';
 import Auth from '../utils/auth';
-import { searchGoogleBooks } from '../utils/API'; // Assuming this is for external book search and remains unchanged
-import { SAVE_BOOK } from '../utils/mutations'; // Assuming you have a SAVE_BOOK mutation
-import { saveBookIds, getSavedBookIds } from '../utils/localStorage';
+import { searchGoogleBooks } from '../utils/API'; 
+import { SAVE_BOOK } from '../utils/mutations'; 
+import { getSavedBookIds } from '../utils/localStorage';
 
 const SearchBooks = () => {
   const [searchedBooks, setSearchedBooks] = useState([]);
