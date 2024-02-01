@@ -1,23 +1,15 @@
-import React from 'react';
-import { ApolloProvider, ApolloClient, InMemoryCache, createHttpLink } from '@apollo/client';
-import { BrowserRouter as Router } from 'react-router-dom';
-import App from './App';
+import './App.css';
+import { Outlet } from 'react-router-dom';
 
-const httpLink = createHttpLink({
-  uri: '/graphql',
-});
+import Navbar from './components/Navbar';
 
-const client = new ApolloClient({
-  link: httpLink,
-  cache: new InMemoryCache(),
-});
+function App() {
+  return (
+    <>
+      <Navbar />
+      <Outlet />
+    </>
+  );
+}
 
-const Root = () => (
-  <ApolloProvider client={client}>
-    <Router>
-      <App />
-    </Router>
-  </ApolloProvider>
-);
-
-export default Root;
+export default App;
