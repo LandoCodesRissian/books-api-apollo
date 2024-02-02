@@ -4,41 +4,42 @@ const { typeDefs, resolvers } = require('./schemas');
 const db = require('./config/connection');
 const { authMiddleware } = require('./utils/auth');
 const path = require('path');
+const cors = require('cors'); // Make sure to install cors package
 
 const PORT = process.env.PORT || 3001;
 const app = express();
+
+app.use(cors()); // Enable all CORS requests
+
 const server = new ApolloServer({
   typeDefs,
   resolvers,
   context: authMiddleware,
+  introspection: true,
 });
 
-// Middleware for parsing JSON and urlencoded form data
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
-
-// Serve static assets (React application) in production or development
 app.use(express.static(path.join(__dirname, '../client/dist')));
 
-// Apollo Server setup
-const startApolloServer = async () => {
-  await server.start();
-  server.applyMiddleware({ app }); // Apply the Apollo GraphQL middleware
+async function startApolloServer() {
+  try {
+    await server.start();
+    server.applyMiddleware({ app, path: '/graphql' }); // Explicitly set the path for GraphQL
 
-  // Serve the React application's index.html for all other requests to enable SPA routing
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../client/dist/index.html'));
-});
-
-  // Once the database is open, start the Express server
-  db.once('open', () => {
-    app.listen(PORT, () => {
-      console.log(`🚀 API server running on port ${PORT}!`);
-      console.log(`Use GraphQL at http://localhost:${PORT}${server.graphqlPath}`);
+    app.get('*', (req, res) => {
+      res.sendFile(path.join(__dirname, '../client/dist/index.html'));
     });
-  });
-};
 
-
+    db.once('open', () => {
+      app.listen(PORT, () => {
+        console.log(`🚀 API server running on port ${PORT}!`);
+        console.log(`🔍 GraphQL Playground available at http://localhost:${PORT}/graphql`);
+      });
+    });
+  } catch (error) {
+    console.error('Server startup error:', error);
+  }
+}
 
 startApolloServer();
