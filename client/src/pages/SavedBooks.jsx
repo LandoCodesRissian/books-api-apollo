@@ -2,18 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation } from '@apollo/client';
 import { GET_ME } from '../utils/queries';
 import { REMOVE_BOOK } from '../utils/mutations';
-import { Container, Card, Button, Row, Col } from 'react-bootstrap';
+import { Container, Card, Button, Row, Col, Image } from 'react-bootstrap';
 import { getSavedBookIds } from '../utils/localStorage';
 import Auth from '../utils/auth';
 import { removeBookId } from '../utils/localStorage';
 
 const SavedBooks = () => {
   const { loading, data } = useQuery(GET_ME);
-  const [removeBook, { error }] = useMutation(REMOVE_BOOK); // Using REMOVE_BOOK mutation
+  const [removeBook, { error }] = useMutation(REMOVE_BOOK);
 
   const userData = data?.me || {};
 
-  // Create a function to handle removing a book from the saved list
   const handleDeleteBook = async (bookId) => {
     const token = Auth.loggedIn() ? Auth.getToken() : null;
 
@@ -51,7 +50,10 @@ const SavedBooks = () => {
             <Card>
               <Card.Body>
                 <Card.Title>{book.title}</Card.Title>
-                {/* Additional book details */}
+                <Card.Text>Author: {book.authors.join(', ')}</Card.Text>
+                <Card.Text>{book.description}</Card.Text>
+                {book.image && <Image src={book.image} alt={`Cover of ${book.title}`} thumbnail />}
+                {book.link && <Button variant="primary" href={book.link} target="_blank">View on Google Books</Button>}
                 <Button variant="danger" onClick={() => handleDeleteBook(book.bookId)}>Delete from saved</Button>
               </Card.Body>
             </Card>
