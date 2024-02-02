@@ -24,7 +24,7 @@ and we'll tell you all about it.
 ## Live site
 https://booksearchforyourease.onrender.com
 
-## Contributers
+## Contributors
 Marcus Herrerra (a TA in my class) helped me trouble shoots connection issues to my server files a lot
 Dex Mills (teacher in my class) helped me get the website live when I was having issued with Atlas
 And [Me](https://github.com/LandonP172) of course!
